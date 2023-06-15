@@ -7,10 +7,14 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.util.RobotUtils;
 
 @TeleOp
 @Config
 public class driveLULU extends LinearOpMode {
+
+    private RobotUtils robot;
+
 
     enum Mode {
         TURBO,
@@ -24,6 +28,8 @@ public class driveLULU extends LinearOpMode {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.pendul.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.pendul.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         waitForStart();
 
@@ -75,6 +81,24 @@ public class driveLULU extends LinearOpMode {
             }
 
             drive.update();
+
+            if(robot.hasDetected()){
+                robot.cleste.setPosition(robot.cleste_inchis);
+                sleep(500);
+                robot.intake_to_outake();
+                sleep(500);
+                robot.cleste_outake.setPosition(robot.cleste_outake_inchis);
+                sleep(500);
+                robot.outake();
+                sleep(500);
+                robot.outake_reset();
+            }
+            if(gamepad1.square){
+                //TODO: Sa se extinda extendo-ul inainte de a se deschide gheara
+                robot.cleste.setPosition(robot.cleste_deschis);
+            }
+
+            //TODO: Un if care verifica daca senzorul de distanta vede pole-ul, daca da, apeleaza functia outake_servo_jos
 
             telemetry.addData("Mod sasiu: ", currentMode.toString());
             telemetry.update();
