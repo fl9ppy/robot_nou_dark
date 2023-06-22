@@ -16,6 +16,13 @@ public class driveLULU extends LinearOpMode {
     private RobotUtils robot;
 
 
+    enum Mode2 {
+        RETRACT,
+        IDLE,
+        EXTEND,
+        MANUAL
+    }
+
     enum Mode {
         TURBO,
         PRECISION,
@@ -23,13 +30,13 @@ public class driveLULU extends LinearOpMode {
     }
 
     Mode currentMode = Mode.DRIVER_CONTROL;
+    Mode2 extendoMode = Mode2.IDLE;
     public void runOpMode() throws InterruptedException {
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.pendul.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.pendul.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.extendo.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         waitForStart();
 
@@ -76,6 +83,42 @@ public class driveLULU extends LinearOpMode {
                     );
 
                     if(gamepad1.left_trigger==0) currentMode = Mode.DRIVER_CONTROL;
+
+                    break;
+            }
+
+            switch (extendoMode){
+                case EXTEND:
+                    robot.extend();
+
+                    if (gamepad1.triangle) extendoMode = Mode2.IDLE;
+                    if (gamepad1.circle) extendoMode = Mode2.RETRACT;
+
+                    break;
+
+                case RETRACT:
+                    robot.retract();
+
+                    if (gamepad1.triangle) extendoMode = Mode2.IDLE;
+                    if (gamepad1.cross) extendoMode = Mode2.EXTEND;
+
+                    break;
+
+                case IDLE:
+                    robot.extendo.setPower(0);
+                    robot.extendo.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+                    if(gamepad1.square) extendoMode = Mode2.MANUAL;
+                    if(gamepad1.circle) extendoMode = Mode2.RETRACT;
+                    if(gamepad1.cross) extendoMode = Mode2.EXTEND;
+
+                    break;
+
+                case MANUAL:
+                    robot.extendo.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                    robot.extendo.setPower(gamepad2.right_stick_x);
+
+                    if(gamepad2.triangle) extendoMode = Mode2.IDLE;
 
                     break;
             }

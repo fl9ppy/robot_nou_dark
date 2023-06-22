@@ -7,8 +7,12 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class RobotUtils {
 
-    public DcMotor pendul;
+    public Servo pendul;
+    public Servo pendul2;
     public DcMotor outake;
+    public DcMotor extendo;
+    public DcMotor slider1;
+    public DcMotor slider2;
     public Servo intake;
     public Servo cleste;
     public Servo cleste_outake;
@@ -23,8 +27,6 @@ public class RobotUtils {
     public int pendul_jos_pos = 0;
     public int pendul_neutru_pos = 0;
     public int pendul_intake_to_outake = 0;
-    public int pendul_power = 1;
-    public int pendul_power_down =-1;
     public int cleste_deschis = 0;
     public int cleste_inchis = 0;
     public int cleste_outake_deschis = 0;
@@ -35,54 +37,80 @@ public class RobotUtils {
     public int outake_servo_reset_pos = 0;
     public int outake_power = 1;
     public int outake_power_down = -1;
+    public int slider1_high = 0;
+    public int slider1_mid = 0;
+    public int slider2_high = 0;
+    public int slider2_mid = 0;
+    public int extend_pos = 0;
+    public int retract_pos = 0;
     public boolean flipped = false;
 
     public RobotUtils(HardwareMap hardwareMap){
-        pendul = hardwareMap.get(DcMotor.class, "pendul");
+        pendul = hardwareMap.get(Servo.class, "pendul");
+        pendul2 = hardwareMap.get(Servo.class, "pendul2");
         intake = hardwareMap.get(Servo.class, "intake");
         sensor_intake = hardwareMap.get(RevColorSensorV3.class, "sensorintake");
         cleste = hardwareMap.get(Servo.class, "cleste");
         outake = hardwareMap.get(DcMotor.class, "outake");
         servo_outake = hardwareMap.get(Servo.class, "servo_outake");
+        extendo = hardwareMap.get(DcMotor.class, "extendo");
+        slider1 = hardwareMap.get(DcMotor.class, "slider1");
+        slider2 = hardwareMap.get(DcMotor.class, "slider2");
+    }
+
+    public void go_high(){
+            slider1.setTargetPosition(slider1_high);
+            slider2.setTargetPosition(slider2_high);
+            slider1.setPower(1);
+            slider2.setPower(-1);
+            slider1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            slider2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+    public void go_mid(){
+        slider1.setTargetPosition(slider1_mid);
+        slider2.setTargetPosition(slider2_mid);
+        slider1.setPower(1);
+        slider2.setPower(-1);
+        slider1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slider2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+
+    public void extend(){
+        extendo.setTargetPosition(extend_pos);
+        extendo.setPower(1);
+        extendo.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+
+    public void retract(){
+        extendo.setTargetPosition(retract_pos);
+        extendo.setPower(-1);
+        extendo.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     public void gheara_sus(){
         intake.setPosition(gheara_sus_pos);
-        pendul.setTargetPosition(pendul_sus_pos);
-        pendul.setPower(pendul_power);
-        pendul.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        pendul.setPosition(pendul_sus_pos);
     }
 
     public void gheara_jos(){
         intake.setPosition(gheara_jos_pos);
-        pendul.setTargetPosition(pendul_jos_pos);
-        pendul.setPower(pendul_power_down);
-        pendul.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        pendul.setPosition(pendul_jos_pos);
     }
     public void gheara_neutru(){
         intake.setPosition(gheara_neutru_pos);
-        pendul.setTargetPosition(pendul_neutru_pos);
-        if(pendul.getCurrentPosition()>0)
-            pendul.setPower(pendul_power_down);
-        else
-            pendul.setPower(pendul_power);
-        pendul.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        pendul.setPosition(pendul_neutru_pos);
     }
 
     public void intake_to_outake(){
         //TODO: Retragere extendo daca e extins
         intake.setPosition(intake_to_outake);
-        pendul.setTargetPosition(pendul_intake_to_outake);
-        pendul.setPower(pendul_power);
-        pendul.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        pendul.setPosition(pendul_intake_to_outake);
         if(intake.getPosition()==intake_to_outake){
             flipped = true;
             cleste.setPosition(cleste_deschis);
         }
         intake.setPosition(gheara_neutru_pos);
-        pendul.setTargetPosition(pendul_neutru_pos);
-        pendul.setPower(pendul_power_down);
-        pendul.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        pendul.setPosition(pendul_neutru_pos);
         flipped = false;
     }
 
