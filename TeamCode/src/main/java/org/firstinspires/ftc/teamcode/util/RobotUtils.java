@@ -26,6 +26,10 @@ public class RobotUtils {
     public int pendul_sus_pos = 0;
     public int pendul_jos_pos = 0;
     public int pendul_neutru_pos = 0;
+    public int intake_to_outake2 = 0;
+    public int pendul_sus_pos2 = 0;
+    public int pendul_jos_pos2 = 0;
+    public int pendul_neutru_pos2 = 0;
     public int pendul_intake_to_outake = 0;
     public int cleste_deschis = 0;
     public int cleste_inchis = 0;
@@ -41,8 +45,13 @@ public class RobotUtils {
     public int slider1_mid = 0;
     public int slider2_high = 0;
     public int slider2_mid = 0;
+    public int slider1_down = 0;
+    public int slider2_down = 0;
     public int extend_pos = 0;
     public int retract_pos = 0;
+    public int low_pendul = 0;
+    public int low_pendul2 = 0;
+    public int low_gheara = 0;
     public boolean flipped = false;
 
     public RobotUtils(HardwareMap hardwareMap){
@@ -59,12 +68,12 @@ public class RobotUtils {
     }
 
     public void go_high(){
-            slider1.setTargetPosition(slider1_high);
-            slider2.setTargetPosition(slider2_high);
-            slider1.setPower(1);
-            slider2.setPower(-1);
-            slider1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            slider2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slider1.setTargetPosition(slider1_high);
+        slider2.setTargetPosition(slider2_high);
+        slider1.setPower(1);
+        slider2.setPower(-1);
+        slider1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slider2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
     public void go_mid(){
         slider1.setTargetPosition(slider1_mid);
@@ -74,7 +83,19 @@ public class RobotUtils {
         slider1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         slider2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
-
+    public void go_low(){
+        pendul.setPosition(low_pendul);
+        pendul2.setPosition(low_pendul2);
+        intake.setPosition(low_gheara);
+    }
+    public void go_down(){
+        slider1.setTargetPosition(slider1_down);
+        slider2.setTargetPosition(slider2_down);
+        slider1.setPower(1);
+        slider2.setPower(-1);
+        slider1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slider2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
     public void extend(){
         extendo.setTargetPosition(extend_pos);
         extendo.setPower(1);
@@ -90,15 +111,18 @@ public class RobotUtils {
     public void gheara_sus(){
         intake.setPosition(gheara_sus_pos);
         pendul.setPosition(pendul_sus_pos);
+        pendul2.setPosition(pendul_sus_pos2);
     }
 
     public void gheara_jos(){
         intake.setPosition(gheara_jos_pos);
         pendul.setPosition(pendul_jos_pos);
+        pendul2.setPosition(pendul_jos_pos2);
     }
     public void gheara_neutru(){
         intake.setPosition(gheara_neutru_pos);
         pendul.setPosition(pendul_neutru_pos);
+        pendul2.setPosition(pendul_neutru_pos2);
     }
 
     public void intake_to_outake(){
@@ -144,6 +168,6 @@ public class RobotUtils {
         else
             return false;
     }
-
+ //ana a fost aici <33;
     //TODO: Functie pentru detectia pole-u-lui
 }

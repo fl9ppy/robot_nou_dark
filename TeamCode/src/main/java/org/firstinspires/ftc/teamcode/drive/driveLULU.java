@@ -16,13 +16,21 @@ public class driveLULU extends LinearOpMode {
     private RobotUtils robot;
 
 
+
+    enum Mode3{
+        IDLE,
+        HIGH,
+        MID,
+        LOW,
+        DOWN,
+        MANUAL
+    }
     enum Mode2 {
         RETRACT,
         IDLE,
         EXTEND,
         MANUAL
     }
-
     enum Mode {
         TURBO,
         PRECISION,
@@ -31,12 +39,16 @@ public class driveLULU extends LinearOpMode {
 
     Mode currentMode = Mode.DRIVER_CONTROL;
     Mode2 extendoMode = Mode2.IDLE;
+    Mode3 sliderMode = Mode3.IDLE;
     public void runOpMode() throws InterruptedException {
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.extendo.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.extendo.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.slider1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.slider2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         waitForStart();
 
@@ -121,6 +133,75 @@ public class driveLULU extends LinearOpMode {
                     if(gamepad2.triangle) extendoMode = Mode2.IDLE;
 
                     break;
+            }
+
+            switch (sliderMode){
+                case HIGH:
+                    robot.go_high();
+
+                    if(gamepad1.dpad_left) sliderMode = Mode3.LOW;
+                    if(gamepad1.dpad_right) sliderMode = Mode3.MID;
+                    if(gamepad1.dpad_down) sliderMode = Mode3.DOWN;
+                    if(gamepad1.right_stick_button) sliderMode = Mode3.MANUAL;
+                    if(gamepad1.left_stick_button) sliderMode = Mode3.IDLE;
+
+                case LOW:
+                    robot.go_low();
+
+                    if(gamepad1.dpad_up) sliderMode = Mode3.HIGH;
+                    if(gamepad1.dpad_right) sliderMode = Mode3.MID;
+                    if(gamepad1.dpad_down) sliderMode = Mode3.DOWN;
+                    if(gamepad1.right_stick_button) sliderMode = Mode3.MANUAL;
+                    if(gamepad1.left_stick_button) sliderMode = Mode3.IDLE;
+
+                case MID:
+                    robot.go_mid();
+
+                if(gamepad1.dpad_left) sliderMode = Mode3.LOW;
+                if(gamepad1.dpad_down) sliderMode = Mode3.DOWN;
+                if(gamepad1.dpad_up) sliderMode = Mode3.HIGH;
+                if(gamepad1.right_stick_button) sliderMode = Mode3.MANUAL;
+                if(gamepad1.left_stick_button) sliderMode = Mode3.IDLE;
+
+                case DOWN:
+                    robot.go_down();
+
+                if(gamepad1.dpad_left) sliderMode = Mode3.LOW;
+                if(gamepad1.dpad_right) sliderMode = Mode3.MID;
+                if(gamepad1.dpad_up) sliderMode = Mode3.HIGH;
+                if(gamepad1.right_stick_button) sliderMode = Mode3.MANUAL;
+                if(gamepad1.left_stick_button) sliderMode = Mode3.IDLE;
+
+                case IDLE:
+                    robot.slider1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                    robot.slider2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+                if(gamepad1.dpad_left) sliderMode = Mode3.LOW;
+                if (gamepad1.dpad_down) sliderMode = Mode3.DOWN;
+                if(gamepad1.dpad_up) sliderMode = Mode3.HIGH;
+                if(gamepad1.right_stick_button) sliderMode = Mode3.MANUAL;
+                if(gamepad1.dpad_right) sliderMode = Mode3.MID;
+
+                case MANUAL:
+                    robot.slider1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                    robot.slider1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+                    if(gamepad1.right_trigger != 0){
+                        robot.slider1.setPower(0.6);
+                        robot.slider2.setPower(-0.6);
+                    }
+                    else if(gamepad1.left_trigger != 0){
+                        robot.slider1.setPower(-0.6);
+                        robot.slider2.setPower(0.6);
+                    }
+                    else{
+                        robot.slider1.setPower(0);
+                        robot.slider2.setPower(0);
+                    }
+
+                    if(gamepad1.left_stick_button) sliderMode = Mode3.IDLE;
+
+
             }
 
             drive.update();
