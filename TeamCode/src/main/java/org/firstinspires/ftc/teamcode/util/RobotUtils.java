@@ -168,6 +168,8 @@ public class RobotUtils {
         else
             return false;
     }
- //ana a fost aici <33;
+
+
+
     //TODO: Functie pentru detectia pole-u-lui
 }

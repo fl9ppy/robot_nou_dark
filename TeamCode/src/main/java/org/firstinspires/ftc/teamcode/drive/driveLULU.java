@@ -222,6 +222,8 @@ public class driveLULU extends LinearOpMode {
                 robot.cleste.setPosition(robot.cleste_deschis);
             }
 
+            if(gamepad2.b) robot.pendul.setPosition(0.5);
+
             //TODO: Un if care verifica daca senzorul de distanta vede pole-ul, daca da, apeleaza functia outake_servo_jos
 
             telemetry.addData("Mod sasiu: ", currentMode.toString());
