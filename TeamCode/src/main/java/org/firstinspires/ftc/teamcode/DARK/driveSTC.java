@@ -41,8 +41,17 @@ public class driveSTC extends LinearOpMode {
         PRECISION,
         DRIVER_CONTROL
     }
+    enum Mode2{
+        HIGH,
+        MID,
+        LOW,
+        DOWN,
+        IDLE,
+        MANUAL,
+    }
 
     Mode currentMode = Mode.DRIVER_CONTROL;
+    Mode2 sliderMode = Mode2.IDLE;
 
     public void runOpMode() throws InterruptedException {
 
@@ -100,6 +109,98 @@ public class driveSTC extends LinearOpMode {
                     break;
             }
 
+            switch(sliderMode){
+                case HIGH:
+                    robot.goHigh();
+
+                    if(gamepad1.dpad_down) sliderMode = Mode2.DOWN;
+                    if(gamepad1.dpad_right) sliderMode = Mode2.MID;
+                    if(gamepad1.dpad_left) sliderMode = Mode2.LOW;
+                    if(gamepad1.right_stick_button) sliderMode = Mode2.MANUAL;
+
+                    break;
+
+                case MID:
+                    robot.goMid();
+
+                    if(gamepad1.dpad_up) sliderMode = Mode2.HIGH;
+                    if(gamepad1.dpad_down) sliderMode = Mode2.DOWN;
+                    if(gamepad1.dpad_left) sliderMode = Mode2.LOW;
+                    if(gamepad1.right_stick_button) sliderMode = Mode2.MANUAL;
+
+                    break;
+
+                case LOW:
+                    robot.goLow();
+
+                    if(gamepad1.dpad_up) sliderMode = Mode2.HIGH;
+                    if(gamepad1.dpad_down) sliderMode = Mode2.DOWN;
+                    if(gamepad1.dpad_right) sliderMode = Mode2.MID;
+                    if(gamepad1.right_stick_button) sliderMode = Mode2.MANUAL;
+
+                    break;
+
+                case DOWN:
+                    robot.goDown();
+
+                    if(gamepad1.dpad_up) sliderMode = Mode2.HIGH;
+                    if(gamepad1.dpad_right) sliderMode = Mode2.MID;
+                    if(gamepad1.dpad_left) sliderMode = Mode2.LOW;
+                    if(gamepad1.right_stick_button) sliderMode = Mode2.MANUAL;
+
+                    break;
+
+                case MANUAL:
+                    robot.slider1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                    robot.slider2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+                    if(gamepad1.right_bumper){
+                        robot.slider1.setPower(0.7);
+                        robot.slider2.setPower(-0.7);
+                    }
+                    else if(gamepad1.left_bumper){
+                        robot.slider1.setPower(-0.7);
+                        robot.slider1.setPower(0.7);
+                    }
+                    else{
+                        robot.slider1.setPower(0);
+                        robot.slider2.setPower(0);
+                    }
+
+                    if(gamepad1.left_stick_button) sliderMode = Mode2.IDLE;
+
+                    break;
+
+                case IDLE:
+                    robot.slider1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                    robot.slider2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+                    if(gamepad1.dpad_up) sliderMode = Mode2.HIGH;
+                    if(gamepad1.dpad_down) sliderMode = Mode2.DOWN;
+                    if(gamepad1.dpad_right) sliderMode = Mode2.MID;
+                    if(gamepad1.dpad_left) sliderMode = Mode2.LOW;
+                    if(gamepad1.right_stick_button) sliderMode = Mode2.MANUAL;
+
+                    break;
+            }
+
+            drive.update();
+
+            if(robot.hasDetected()){
+                robot.close_intake();
+                sleep(100);
+                robot.flip();
+                robot.flip_cone();
+            }
+            if(gamepad1.square){
+                robot.open_intake();
+                sleep(200);
+                robot.return_cone();
+                robot.brat_return();
+            }
+
+            telemetry.addData("Mod sasiu: ", currentMode.toString());
+            telemetry.addData("Mod outake: ", sliderMode.toString());
             telemetry.update();
         }
     }
