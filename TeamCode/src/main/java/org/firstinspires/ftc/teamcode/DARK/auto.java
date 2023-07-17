@@ -99,23 +99,23 @@ public class auto extends LinearOpMode {
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
-        Pose2d startPose = new Pose2d(-60.5, -35, 0);
+        Pose2d startPose = new Pose2d(-35, -60, 0);
         drive.setPoseEstimate(startPose);
 
 
         TrajectorySequence parcare1 = drive.trajectorySequenceBuilder(startPose)
-                .lineToLinearHeading(new Pose2d(-60, -60, Math.toRadians(90)))
-                .lineToLinearHeading(new Pose2d(-60, -64, Math.toRadians(90)))
+                .strafeLeft(25)
+                .back(30)
 
                 .build();
 
         TrajectorySequence parcare2 = drive.trajectorySequenceBuilder(startPose)
-                .lineToLinearHeading(new Pose2d(-35, -35, Math.toRadians(90)))
+                .back(30)
                 .build();
 
-        TrajectorySequence parcare3 = drive.trajectorySequenceBuilder(parcare1.end())
-                .lineToLinearHeading(new Pose2d(-12, -58, Math.toRadians(90)))
-                .lineToLinearHeading(new Pose2d(-12, -35, Math.toRadians(90)))
+        TrajectorySequence parcare3 = drive.trajectorySequenceBuilder(startPose)
+                .strafeRight(25)
+                .back(30)
                 .build();
 
 
