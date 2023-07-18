@@ -33,7 +33,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
-@TeleOp
+@TeleOp(name="driveSTC",group = "teleop")
 @Config
 public class driveSTC extends LinearOpMode {
 
