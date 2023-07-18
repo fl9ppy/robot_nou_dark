@@ -33,7 +33,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
-@TeleOp(name="driveSTC",group = "teleop")
+@TeleOp(name="drive",group = "teleop")
 @Config
 public class driveSTC extends LinearOpMode {
 
@@ -55,13 +55,6 @@ public class driveSTC extends LinearOpMode {
     Mode currentMode = Mode.DRIVER_CONTROL;
     Mode2 sliderMode = Mode2.IDLE;
 
-    private ElapsedTime first_timer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
-    private ElapsedTime second_timer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
-    private boolean  hasMoved = false;
-    private boolean hasReturned = false;
-
-
-
     public void runOpMode() throws InterruptedException {
 
         robot = new RobotUtils(hardwareMap);
@@ -70,11 +63,13 @@ public class driveSTC extends LinearOpMode {
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.slider1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.slider2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.brat.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.slider1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.slider2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.brat.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.slider1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robot.slider2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        robot.brat2.setDirection(Servo.Direction.REVERSE);
+        robot.brat.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robot.flip();
         robot.open_intake();
         robot.flip_cone();
@@ -232,15 +227,19 @@ public class driveSTC extends LinearOpMode {
 //            if(gamepad2.circle) robot.close_intake();
 //            if(gamepad2.cross) robot.flip();
 //            if(gamepad2.cross) robot.brat_return();
-//            if(gamepad2.dpad_right) robot.flip_cone();
+            if(gamepad2.dpad_right) robot.flip_cone();
 //            if(gamepad2.dpad_left) robot.return_cone();
+            if(gamepad2.right_trigger != 0)
+                robot.brat.setPower(0.5);
+            if(gamepad2.left_trigger != 0)
+                robot.brat.setPower(-0.5);
+
 
             telemetry.addData("Mod sasiu: ", currentMode.toString());
             telemetry.addData("Mod outake: ", sliderMode.toString());
             telemetry.addData("slider1", robot.slider1.getCurrentPosition());
             telemetry.addData("slider2", robot.slider2.getCurrentPosition());
-            telemetry.addData("brat1", robot.brat1.getPosition());
-            telemetry.addData("brat2", robot.brat2.getPosition());
+            telemetry.addData("brat1", robot.brat.getCurrentPosition());
             telemetry.addData("pivot", robot.pivot.getPosition());
             telemetry.addData("intake", robot.intake.getPosition());
             telemetry.update();

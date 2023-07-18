@@ -30,8 +30,7 @@ public class RobotUtils {
     public DcMotor slider1;
     public DcMotor slider2;
     public Servo intake;
-    public Servo brat1;
-    public Servo brat2;
+    public DcMotor brat;
     public Servo pivot;
 //    public RevColorSensorV3 sensor;
     public static int slider1_high = 4000;
@@ -44,11 +43,9 @@ public class RobotUtils {
     public static int slider2_low = -1600;
     public static double intake_open = 0;
     public static double intake_close = 0.5;
-    public static double brat1_up = 0.1;
-    public static double brat2_up = 0.1;
-    public static double brat1_return = 0.68;
-    public static double brat2_return = 0.68;
-    public static double pivot_turn = 0.66;
+    public static int brat_up = 0;
+    public static int brat_return = 0;
+    public static double pivot_turn = 0;
     public static double pivot_return = 0;
 
     public RobotUtils(HardwareMap hardwareMap)
@@ -56,8 +53,7 @@ public class RobotUtils {
         slider1 = hardwareMap.get(DcMotor.class, "slider1");
         slider2 = hardwareMap.get(DcMotor.class, "slider2");
         intake = hardwareMap.get(Servo.class, "intake");
-        brat1 = hardwareMap.get(Servo.class, "brat1");
-        brat2 = hardwareMap.get(Servo.class, "brat2");
+        brat = hardwareMap.get(DcMotor.class, "brat");
         pivot = hardwareMap.get(Servo.class, "pivot");
 //        sensor = hardwareMap.get(RevColorSensorV3.class, "sensor");
     }
@@ -99,13 +95,15 @@ public class RobotUtils {
     }
 
     public void flip(){
-        brat1.setPosition(brat1_up);
-        brat2.setPosition(brat2_up);
+        brat.setTargetPosition(brat_up);
+        brat.setPower(0.6);
+        brat.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     public void brat_return(){
-        brat1.setPosition(brat1_return);
-        brat2.setPosition(brat2_return);
+        brat.setTargetPosition(brat_return);
+        brat.setPower(-0.6);
+        brat.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     public void flip_cone(){
