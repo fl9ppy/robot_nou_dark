@@ -65,7 +65,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
  *   Roll value should INCREASE as the robot is tipped UP at the left side. (Rotation about Y) <br>
  *   Yaw value should INCREASE as the robot is rotated Counter Clockwise. (Rotation about Z) <br>
  * <p>
- * The Yaw can be reset (to zero) by pressing the Y button on the gamepad (Triangle on a PS4 controller)
+ * The Yaw can be reset (to zero) by pressing the Y button on the gamepad (cross on a PS4 controller)
  * <p>
  * The rotational velocities should follow the change in corresponding axes.
  */
@@ -103,7 +103,7 @@ public class ConceptExploringIMUOrientation extends LinearOpMode {
                 telemetry.addData("Yaw", "Resetting\n");
                 imu.resetYaw();
             } else {
-                telemetry.addData("Yaw", "Press Y (triangle) on Gamepad to reset.\n");
+                telemetry.addData("Yaw", "Press Y (cross) on Gamepad to reset.\n");
             }
 
             // Check to see if new Logo Direction is requested

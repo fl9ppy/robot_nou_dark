@@ -33,23 +33,23 @@ public class RobotUtils {
     public Servo brat1;
     public Servo brat2;
     public Servo pivot;
-    public RevColorSensorV3 sensor;
-    public int slider1_high = 0;
-    public int slider2_high = 0;
-    public int slider1_mid = 0;
-    public int slider2_mid = 0;
-    public int slider1_down = 0;
-    public int slider2_down = 0;
-    public int intake_open = 0;
-    public int intake_close = 0;
-    public int brat1_up = 0;
-    public int brat1_low = 0;
-    public int brat2_up = 0;
-    public int brat2_low = 0;
-    public int brat1_return = 0;
-    public int brat2_return = 0;
-    public int pivot_turn = 0;
-    public int pivot_return = 0;
+//    public RevColorSensorV3 sensor;
+    public static int slider1_high = 4000;
+    public static int slider2_high = -4000;
+    public static int slider1_mid = 2800;
+    public static int slider2_mid = -2800;
+    public static int slider1_down = 35;
+    public static int slider2_down = -35;
+    public static int slider1_low = 1600;
+    public static int slider2_low = -1600;
+    public static double intake_open = 0;
+    public static double intake_close = 0.5;
+    public static double brat1_up = 0.1;
+    public static double brat2_up = 0.1;
+    public static double brat1_return = 0.68;
+    public static double brat2_return = 0.68;
+    public static double pivot_turn = 0.66;
+    public static double pivot_return = 0;
 
     public RobotUtils(HardwareMap hardwareMap)
     {
@@ -57,16 +57,16 @@ public class RobotUtils {
         slider2 = hardwareMap.get(DcMotor.class, "slider2");
         intake = hardwareMap.get(Servo.class, "intake");
         brat1 = hardwareMap.get(Servo.class, "brat1");
-        brat2 = hardwareMap.get(Servo.class, "brat1");
+        brat2 = hardwareMap.get(Servo.class, "brat2");
         pivot = hardwareMap.get(Servo.class, "pivot");
-        sensor = hardwareMap.get(RevColorSensorV3.class, "sensor");
+//        sensor = hardwareMap.get(RevColorSensorV3.class, "sensor");
     }
 
     public void goHigh(){
         slider1.setTargetPosition(slider1_high);
         slider2.setTargetPosition(slider2_high);
-        slider1.setPower(0.5);
-        slider2.setPower(-0.5);
+        slider1.setPower(0.9);
+        slider2.setPower(-0.9);
         slider1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         slider2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
@@ -74,20 +74,28 @@ public class RobotUtils {
     public void goMid(){
         slider1.setTargetPosition(slider1_mid);
         slider2.setTargetPosition(slider2_mid);
-        slider1.setPower(0.5);
-        slider2.setPower(-0.5);
+        slider1.setPower(0.9);
+        slider2.setPower(-0.9);
         slider1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         slider2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     public void goLow(){
-        brat1.setPosition(brat1_low);
-        brat2.setPosition(brat2_low);
+        slider1.setTargetPosition(slider1_low);
+        slider2.setTargetPosition(slider2_low);
+        slider1.setPower(0.9);
+        slider2.setPower(-0.9);
+        slider1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slider2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     public void goDown(){
         slider1.setTargetPosition(slider1_down);
         slider2.setTargetPosition(slider2_down);
+        slider1.setPower(-0.9);
+        slider2.setPower(0.9);
+        slider1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slider2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     public void flip(){
@@ -114,15 +122,14 @@ public class RobotUtils {
         intake.setPosition(intake_close);
     }
 
-    public boolean lifed(){
-        if(slider1.getCurrentPosition() > 300 && slider2.getCurrentPosition() > 300)
-            return true;
-        else return false;
-    }
-
-    public boolean hasDetected(){
-        if(sensor.red() >= 400 || sensor.blue() >= 400 && lifed())
-            return true;
-        else return false;
-    }
+//    public boolean lifed(){
+//        if(slider1.getCurrentPosition() > 300 && slider2.getCurrentPosition() > 300)
+//            return true;
+//        else return false;
+//    }
+//    public boolean hasDetected(){
+//        if(sensor.red() >= 400 || sensor.blue() >= 400 && lifed())
+//            return true;
+//        else return false;
+//    }
 }

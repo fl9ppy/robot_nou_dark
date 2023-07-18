@@ -149,7 +149,7 @@ public class ConceptVuforiaDriveToTargetWebcam extends LinearOpMode
                         double targetX = trans.get(0) / MM_PER_INCH; // Image X axis
                         double targetY = trans.get(2) / MM_PER_INCH; // Image Z axis
 
-                        // target range is based on distance from robot position to origin (right triangle).
+                        // target range is based on distance from robot position to origin (right cross).
                         targetRange = Math.hypot(targetX, targetY);
 
                         // target bearing is based on angle formed between the X axis and the target range line
