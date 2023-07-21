@@ -51,16 +51,8 @@ public class drive extends LinearOpMode {
         MANUAL,
     }
 
-    enum Mode3{
-        UP,
-        DOWN,
-        IDLE,
-        MANUAL
-    }
-
     Mode currentMode = Mode.DRIVER_CONTROL;
     Mode2 sliderMode = Mode2.IDLE;
-    Mode3 bratMode = Mode3.IDLE;
 
     public void runOpMode() throws InterruptedException {
 
@@ -190,54 +182,8 @@ public class drive extends LinearOpMode {
                     if(gamepad1.cross) sliderMode = Mode2.MANUAL;
                     if(gamepad1.left_stick_button) sliderMode = Mode2.LOW;
 
-
-
                     break;
             }
-
-            switch(bratMode){
-                case UP:
-                    robot.flip();
-                    robot.flip_cone();
-
-                    if(gamepad1.dpad_down) bratMode = Mode3.DOWN;
-                    if(gamepad1.dpad_right) bratMode = Mode3.MANUAL;
-
-                    break;
-
-                case DOWN:
-                    robot.brat_return();
-                    robot.return_cone();
-
-                    if(gamepad1.dpad_up) bratMode = Mode3.UP;
-                    if(gamepad1.dpad_right) bratMode = Mode3.MANUAL;
-
-                    break;
-
-                case MANUAL:
-                    robot.brat.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-                    if(gamepad1.right_trigger != 0) robot.brat.setPower(0.6);
-                    else if(gamepad1.left_trigger != 0) robot.brat.setPower(-0.6);
-                    else robot.brat.setPower(0);
-
-                    if(robot.brat.getCurrentPosition() < -125) robot.flip_cone();
-                    else robot.return_cone();
-
-                    if(gamepad1.dpad_left) bratMode = Mode3.IDLE;
-
-                    break;
-
-                case IDLE:
-                    robot.brat.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-                    if(gamepad1.dpad_up) bratMode = Mode3.UP;
-                    if(gamepad1.dpad_right) bratMode = Mode3.MANUAL;
-                    if(gamepad1.dpad_down) bratMode = Mode3.DOWN;
-
-                    break;
-            }
-
             drive.update();
 
             if(robot.hasDetected()){
@@ -248,28 +194,34 @@ public class drive extends LinearOpMode {
                 robot.open_intake();
             }
 
+            if(gamepad1.dpad_up){
+                robot.flip();
+                robot.flip_cone();
+            }
+
+            if (gamepad1.dpad_down) {
+                robot.brat_return();
+                robot.return_cone();
+            }
+
+            if (gamepad2.cross) {
+                robot.brat1.setPosition(0);
+                robot.brat2.setPosition(0);
+            }
+
             if(gamepad2.square) robot.open_intake();
             if(gamepad2.circle) robot.close_intake();
             if(gamepad2.dpad_right) robot.flip_cone();
             if(gamepad2.dpad_left) robot.return_cone();
 
-            if(gamepad2.left_trigger != 0)
-                robot.brat.setPower(0.5);
-
-            else if(gamepad2.right_trigger != 0)
-                robot.brat.setPower(-0.5);
-
-            else robot.brat.setPower(0);
-
-
             telemetry.addData("Mod sasiu: ", currentMode.toString());
             telemetry.addData("Mod outake: ", sliderMode.toString());
-            telemetry.addData("slider1", robot.slider1.getCurrentPosition());
-            telemetry.addData("slider2", robot.slider2.getCurrentPosition());
-            telemetry.addData("brat1", robot.brat.getCurrentPosition());
-            telemetry.addData("pivot", robot.pivot.getPosition());
-            telemetry.addData("intake", robot.intake.getPosition());
-            telemetry.addData("mod brat:", bratMode.toString());
+            telemetry.addData("slider1: ", robot.slider1.getCurrentPosition());
+            telemetry.addData("slider2: ", robot.slider2.getCurrentPosition());
+            telemetry.addData("brat1: ", robot.brat1.getPosition());
+            telemetry.addData("brat2: ", robot.brat2.getPosition());
+            telemetry.addData("pivot: ", robot.pivot.getPosition());
+            telemetry.addData("intake: ", robot.intake.getPosition());
             telemetry.addData("has detected: ", robot.hasDetected());
             telemetry.update();
         }

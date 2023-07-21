@@ -31,7 +31,8 @@ public class RobotUtils {
     public DcMotor slider1;
     public DcMotor slider2;
     public Servo intake;
-    public DcMotor brat;
+    public Servo brat1;
+    public Servo brat2;
     public Servo pivot;
     public RevColorSensorV3 sensor;
     public static int slider1_high = 3000;
@@ -44,8 +45,8 @@ public class RobotUtils {
     public static int slider2_low = -1600;
     public static double intake_open = 0;
     public static double intake_close = 0.5;
-    public static int brat_up = 269;
-    public static int brat_return = 10;
+    public static double  brat_up = 0;
+    public static double brat_return = 0;
     public static double pivot_return = 0;
     public static double pivot_turn = 0.66;
 
@@ -54,7 +55,8 @@ public class RobotUtils {
         slider1 = hardwareMap.get(DcMotor.class, "slider1");
         slider2 = hardwareMap.get(DcMotor.class, "slider2");
         intake = hardwareMap.get(Servo.class, "intake");
-        brat = hardwareMap.get(DcMotor.class, "brat");
+        brat1 = hardwareMap.get(Servo.class, "brat1");
+        brat2 = hardwareMap.get(Servo.class, "brat2");
         pivot = hardwareMap.get(Servo.class, "pivot");
         sensor = hardwareMap.get(RevColorSensorV3.class, "sensor");
 
@@ -64,13 +66,10 @@ public class RobotUtils {
         slider2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         slider2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        brat.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        brat.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        brat1.setDirection(Servo.Direction.REVERSE);
 
         slider1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         slider2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        brat.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     public void goHigh(){
@@ -110,15 +109,13 @@ public class RobotUtils {
     }
 
     public void flip(){
-        brat.setTargetPosition(brat_up);
-        brat.setPower(0.8);
-        brat.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        brat1.setPosition(brat_up);
+        brat2.setPosition(brat_up);
     }
 
     public void brat_return(){
-        brat.setTargetPosition(brat_return);
-        brat.setPower(-0.8);
-        brat.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        brat1.setPosition(brat_return);
+        brat2.setPosition(brat_return);
     }
 
     public void flip_cone(){
