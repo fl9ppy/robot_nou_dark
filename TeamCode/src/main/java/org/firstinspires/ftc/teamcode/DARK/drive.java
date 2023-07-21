@@ -28,14 +28,13 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @TeleOp(name="drive",group = "teleop")
 @Config
-public class driveSTC extends LinearOpMode {
+public class drive extends LinearOpMode {
 
     private RobotUtils robot;
     enum Mode {
@@ -52,30 +51,23 @@ public class driveSTC extends LinearOpMode {
         MANUAL,
     }
 
+    enum Mode3{
+        UP,
+        DOWN,
+        IDLE,
+        MANUAL
+    }
+
     Mode currentMode = Mode.DRIVER_CONTROL;
     Mode2 sliderMode = Mode2.IDLE;
+    Mode3 bratMode = Mode3.IDLE;
 
     public void runOpMode() throws InterruptedException {
 
         robot = new RobotUtils(hardwareMap);
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
-        drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.slider1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.slider2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.brat.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.slider1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.slider2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.brat.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.slider1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        robot.slider2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        robot.brat.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        robot.flip();
-        robot.open_intake();
-        robot.flip_cone();
-
         waitForStart();
-
 
         if (isStopRequested()) return;
 
@@ -203,9 +195,52 @@ public class driveSTC extends LinearOpMode {
                     break;
             }
 
+            switch(bratMode){
+                case UP:
+                    robot.flip();
+                    robot.flip_cone();
+
+                    if(gamepad1.dpad_down) bratMode = Mode3.DOWN;
+                    if(gamepad1.dpad_right) bratMode = Mode3.MANUAL;
+
+                    break;
+
+                case DOWN:
+                    robot.brat_return();
+                    robot.return_cone();
+
+                    if(gamepad1.dpad_up) bratMode = Mode3.UP;
+                    if(gamepad1.dpad_right) bratMode = Mode3.MANUAL;
+
+                    break;
+
+                case MANUAL:
+                    robot.brat.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+                    if(gamepad1.right_trigger != 0) robot.brat.setPower(0.6);
+                    else if(gamepad1.left_trigger != 0) robot.brat.setPower(-0.6);
+                    else robot.brat.setPower(0);
+
+                    if(robot.brat.getCurrentPosition() < -125) robot.flip_cone();
+                    else robot.return_cone();
+
+                    if(gamepad1.dpad_left) bratMode = Mode3.IDLE;
+
+                    break;
+
+                case IDLE:
+                    robot.brat.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+                    if(gamepad1.dpad_up) bratMode = Mode3.UP;
+                    if(gamepad1.dpad_right) bratMode = Mode3.MANUAL;
+                    if(gamepad1.dpad_down) bratMode = Mode3.DOWN;
+
+                    break;
+            }
+
             drive.update();
 
-            if(gamepad1.circle){
+            if(robot.hasDetected()){
                 robot.close_intake();
             }
 
@@ -213,26 +248,18 @@ public class driveSTC extends LinearOpMode {
                 robot.open_intake();
             }
 
-            if(gamepad1.dpad_up){
-                robot.flip();
-                robot.flip_cone();
-            }
-
-            if(gamepad1.dpad_down){
-                robot.brat_return();
-                robot.return_cone();
-            }
-
-//            if(gamepad2.square) robot.open_intake();
-//            if(gamepad2.circle) robot.close_intake();
-//            if(gamepad2.cross) robot.flip();
-//            if(gamepad2.cross) robot.brat_return();
+            if(gamepad2.square) robot.open_intake();
+            if(gamepad2.circle) robot.close_intake();
             if(gamepad2.dpad_right) robot.flip_cone();
-//            if(gamepad2.dpad_left) robot.return_cone();
-            if(gamepad2.right_trigger != 0)
-                robot.brat.setPower(0.5);
+            if(gamepad2.dpad_left) robot.return_cone();
+
             if(gamepad2.left_trigger != 0)
+                robot.brat.setPower(0.5);
+
+            else if(gamepad2.right_trigger != 0)
                 robot.brat.setPower(-0.5);
+
+            else robot.brat.setPower(0);
 
 
             telemetry.addData("Mod sasiu: ", currentMode.toString());
@@ -242,6 +269,8 @@ public class driveSTC extends LinearOpMode {
             telemetry.addData("brat1", robot.brat.getCurrentPosition());
             telemetry.addData("pivot", robot.pivot.getPosition());
             telemetry.addData("intake", robot.intake.getPosition());
+            telemetry.addData("mod brat:", bratMode.toString());
+            telemetry.addData("has detected: ", robot.hasDetected());
             telemetry.update();
         }
     }
