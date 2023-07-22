@@ -35,14 +35,14 @@ public class RobotUtils {
     public Servo brat2;
     public Servo pivot;
     public RevColorSensorV3 sensor;
-    public static int slider1_high = 3250;
-    public static int slider2_high = -3250;
-    public static int slider1_mid = 2800;
-    public static int slider2_mid = -2800;
+    public static int slider1_high = 2700;
+    public static int slider2_high = -2700;
+    public static int slider1_mid = 1400;
+    public static int slider2_mid = -1400;
     public static int slider1_down = 35;
     public static int slider2_down = -35;
-    public static int slider1_low = 1600;
-    public static int slider2_low = -1600;
+    public static int slider1_low = 1500;
+    public static int slider2_low = -1500;
     public static double intake_open = 0;
     public static double intake_close = 0.7;
     public static double  brat_up = 1;
@@ -138,7 +138,7 @@ public class RobotUtils {
         else return false;
     }
     public boolean hasDetected(){
-        if(sensor.red() >= 400 || sensor.blue() >= 400 && !lifed())
+        if(sensor.red() >= 100 || sensor.blue() >= 100 && !lifed())
             return true;
         else return false;
     }

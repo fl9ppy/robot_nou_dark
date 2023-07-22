@@ -111,6 +111,8 @@ public class drive extends LinearOpMode {
             switch(sliderMode){
                 case HIGH:
                     robot.goHigh();
+                    robot.flip();
+                    robot.flip_cone();
 
                     if(gamepad1.left_bumper) sliderMode = Mode2.DOWN;
                     if(gamepad1.right_stick_button) sliderMode = Mode2.MID;
@@ -122,6 +124,8 @@ public class drive extends LinearOpMode {
 
                 case MID:
                     robot.goMid();
+                    robot.flip();
+                    robot.flip_cone();
 
                     if(gamepad1.right_bumper) sliderMode = Mode2.HIGH;
                     if(gamepad1.left_bumper) sliderMode = Mode2.DOWN;
@@ -133,6 +137,8 @@ public class drive extends LinearOpMode {
 
                 case DOWN:
                     robot.goDown();
+                    robot.brat_return();
+                    robot.return_cone();
 
                     if(gamepad1.right_bumper) sliderMode = Mode2.HIGH;
                     if(gamepad1.right_stick_button) sliderMode = Mode2.MID;
@@ -143,6 +149,8 @@ public class drive extends LinearOpMode {
                     
                 case LOW:
                     robot.goLow();
+                    robot.brat_return();
+                    robot.return_cone();
 
                     if(gamepad1.right_bumper) sliderMode = Mode2.HIGH;
                     if(gamepad1.right_stick_button) sliderMode = Mode2.MID;
@@ -204,15 +212,15 @@ public class drive extends LinearOpMode {
                 robot.return_cone();
             }
 
-            if (gamepad2.cross) {
-                robot.brat1.setPosition(0);
-                robot.brat2.setPosition(0);
-            }
+//            if (gamepad2.cross) {
+//                robot.brat1.setPosition(0);
+//                robot.brat2.setPosition(0);
+//            }
 
-            if(gamepad2.square) robot.open_intake();
-            if(gamepad2.circle) robot.close_intake();
-            if(gamepad2.dpad_right) robot.flip_cone();
-            if(gamepad2.dpad_left) robot.return_cone();
+//            if(gamepad2.square) robot.open_intake();
+//            if(gamepad2.circle) robot.close_intake();
+//            if(gamepad2.dpad_right) robot.flip_cone();
+//            if(gamepad2.dpad_left) robot.return_cone();
 
             telemetry.addData("Mod sasiu: ", currentMode.toString());
             telemetry.addData("Mod outake: ", sliderMode.toString());
