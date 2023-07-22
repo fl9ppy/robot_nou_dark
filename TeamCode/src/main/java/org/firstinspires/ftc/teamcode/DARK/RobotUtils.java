@@ -132,13 +132,13 @@ public class RobotUtils {
         intake.setPosition(intake_close);
     }
 
-    public boolean lifed(){
-        if(slider1.getCurrentPosition() > 300 && slider2.getCurrentPosition() > 300)
+    public boolean lifted(){
+        if(slider1.getCurrentPosition() >= 500 && slider2.getCurrentPosition() <= -500)
             return true;
         else return false;
     }
     public boolean hasDetected(){
-        if(sensor.red() >= 100 || sensor.blue() >= 100 && !lifed())
+        if(sensor.red() >= 100 || sensor.blue() >= 100 && lifted()==false)
             return true;
         else return false;
     }
