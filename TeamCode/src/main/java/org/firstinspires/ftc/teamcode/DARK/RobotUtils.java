@@ -35,8 +35,8 @@ public class RobotUtils {
     public Servo brat2;
     public Servo pivot;
     public RevColorSensorV3 sensor;
-    public static int slider1_high = 3000;
-    public static int slider2_high = -3000;
+    public static int slider1_high = 3250;
+    public static int slider2_high = -3250;
     public static int slider1_mid = 2800;
     public static int slider2_mid = -2800;
     public static int slider1_down = 35;
@@ -44,8 +44,8 @@ public class RobotUtils {
     public static int slider1_low = 1600;
     public static int slider2_low = -1600;
     public static double intake_open = 0;
-    public static double intake_close = 0.5;
-    public static double  brat_up = 0;
+    public static double intake_close = 0.7;
+    public static double  brat_up = 1;
     public static double brat_return = 0;
     public static double pivot_return = 0;
     public static double pivot_turn = 0.66;

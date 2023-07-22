@@ -186,7 +186,7 @@ public class drive extends LinearOpMode {
             }
             drive.update();
 
-            if(robot.hasDetected()){
+            if(robot.hasDetected() || gamepad1.circle){
                 robot.close_intake();
             }
 
