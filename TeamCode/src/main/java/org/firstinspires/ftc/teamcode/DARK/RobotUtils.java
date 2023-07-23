@@ -138,7 +138,7 @@ public class RobotUtils {
         else return false;
     }
     public boolean hasDetected(){
-        if(sensor.red() >= 100 || sensor.blue() >= 100 && lifted()==false)
+        if(sensor.red() >= 100 || sensor.blue() >= 100)
             return true;
         else return false;
     }
