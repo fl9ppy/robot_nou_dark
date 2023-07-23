@@ -102,21 +102,7 @@ public class auto extends LinearOpMode {
         Pose2d startPose = new Pose2d(-35, -60, 0);
         drive.setPoseEstimate(startPose);
 
-
-        TrajectorySequence parcare1 = drive.trajectorySequenceBuilder(startPose)
-                .strafeLeft(25)
-                .back(30)
-
-                .build();
-
-        TrajectorySequence parcare2 = drive.trajectorySequenceBuilder(startPose)
-                .back(30)
-                .build();
-
-        TrajectorySequence parcare3 = drive.trajectorySequenceBuilder(startPose)
-                .strafeRight(25)
-                .back(30)
-                .build();
+        //PUT INIT CODE HERE (THAT RUNS WHEN INIT IS PRESSED)
 
 
         while (!isStarted() && !isStopRequested()) {
@@ -172,32 +158,26 @@ public class auto extends LinearOpMode {
             telemetry.update();
         }
 
-        //PUT AUTON CODE HERE (DRIVER PRESSED THE PLAY BUTTON!)
+        //PUT AUTO CODE HERE (DRIVER PRESSED THE PLAY BUTTON!)
 
 
         if (tagOfInterest == null) {
-            drive.followTrajectorySequence(parcare2);
+            drive.followTrajectorySequence(null);
         } else {
             switch (tagOfInterest.id) {
                 case 1:
-                    drive.followTrajectorySequence(parcare1);
+                    drive.followTrajectorySequence(null);
                     break;
                 case 2:
-                    drive.followTrajectorySequence(parcare2);
+                    drive.followTrajectorySequence(null);
                     break;
                 case 3:
-                    drive.followTrajectorySequence(parcare3);
+                    drive.followTrajectorySequence(null);
                     break;
             }
         }
 
         sleep(1000);
-////        telemetry.addData("Object", robot.hasDetectedObject());
-////        telemetry.addData("Servo",robot.gheara.getPosition());
-////        telemetry.addData("slider1",robot.slider1.getCurrentPosition());
-////        telemetry.addData("slider2",robot.slider2.getCurrentPosition());
-////        telemetry.addData("rotire",robot.rotire.getCurrentPosition());
-
 
         telemetry.update();
 
