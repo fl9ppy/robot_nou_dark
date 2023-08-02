@@ -29,6 +29,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
@@ -37,6 +38,8 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 public class drive extends LinearOpMode {
 
     private RobotUtils robot;
+
+
     enum Mode {
         TURBO,
         PRECISION,
@@ -54,10 +57,13 @@ public class drive extends LinearOpMode {
     Mode currentMode = Mode.DRIVER_CONTROL;
     Mode2 sliderMode = Mode2.IDLE;
 
+    private ElapsedTime dropTimer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
+
     public void runOpMode() throws InterruptedException {
 
         robot = new RobotUtils(hardwareMap);
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+         boolean deschis=false;
 
         waitForStart();
 
@@ -84,9 +90,9 @@ public class drive extends LinearOpMode {
                 case TURBO:
                     drive.setWeightedDrivePower(
                             new Pose2d(
-                                    gamepad1.left_stick_y/1.7,
-                                    gamepad1.left_stick_x/1.7,
-                                    -gamepad1.right_stick_x/1.7
+                                    gamepad1.left_stick_y,
+                                    gamepad1.left_stick_x,
+                                    -gamepad1.right_stick_x
                             )
                     );
 
@@ -98,7 +104,7 @@ public class drive extends LinearOpMode {
                     drive.setWeightedDrivePower(
                             new Pose2d(
                                     gamepad1.left_stick_y/4,
-                                    gamepad1.left_stick_x/4,
+                                    -gamepad1.left_stick_x/4,
                                     -gamepad1.right_stick_x/4
                             )
                     );
@@ -111,51 +117,50 @@ public class drive extends LinearOpMode {
             switch(sliderMode){
                 case HIGH:
                     robot.goHigh();
-                    robot.flip();
-                    robot.flip_cone();
+                    /*robot.flip();
+                    robot.flip_cone();*/
 
-                    if(gamepad1.left_bumper) sliderMode = Mode2.DOWN;
-                    if(gamepad1.right_stick_button) sliderMode = Mode2.MID;
-                    if(gamepad1.cross) sliderMode = Mode2.MANUAL;
-                    if(gamepad1.left_stick_button) sliderMode = Mode2.LOW;
+                    if(gamepad1.x) sliderMode = Mode2.HIGH;
+                    if(gamepad1.b) sliderMode = Mode2.DOWN;
+                    if(gamepad1.a) sliderMode = Mode2.MID;
+                    if(gamepad1.y) sliderMode = Mode2.LOW;
 
 
                     break;
 
                 case MID:
                     robot.goMid();
-                    robot.flip();
-                    robot.flip_cone();
+                   /* robot.flip();
+                    robot.flip_cone();*/
 
-                    if(gamepad1.right_bumper) sliderMode = Mode2.HIGH;
-                    if(gamepad1.left_bumper) sliderMode = Mode2.DOWN;
-                    if(gamepad1.cross) sliderMode = Mode2.MANUAL;
-                    if(gamepad1.left_stick_button) sliderMode = Mode2.LOW;
+                    if(gamepad1.x) sliderMode = Mode2.HIGH;
+                    if(gamepad1.b) sliderMode = Mode2.DOWN;
+                    if(gamepad1.a) sliderMode = Mode2.MID;
+                    if(gamepad1.y) sliderMode = Mode2.LOW;
 
 
                     break;
 
                 case DOWN:
                     robot.goDown();
-                    robot.brat_return();
-                    robot.return_cone();
+                    /*robot.brat_return();
+                    robot.return_cone();*/
 
-                    if(gamepad1.right_bumper) sliderMode = Mode2.HIGH;
-                    if(gamepad1.right_stick_button) sliderMode = Mode2.MID;
-                    if(gamepad1.cross) sliderMode = Mode2.MANUAL;
-                    if(gamepad1.left_stick_button) sliderMode = Mode2.LOW;
-
+                    if(gamepad1.x) sliderMode = Mode2.HIGH;
+                    if(gamepad1.b) sliderMode = Mode2.DOWN;
+                    if(gamepad1.a) sliderMode = Mode2.MID;
+                    if(gamepad1.y) sliderMode = Mode2.LOW;
                     break;
                     
                 case LOW:
                     robot.goLow();
-                    robot.brat_return();
-                    robot.return_cone();
+                    /*robot.brat_return();*/
+                   /* robot.return_cone();*/
 
-                    if(gamepad1.right_bumper) sliderMode = Mode2.HIGH;
-                    if(gamepad1.right_stick_button) sliderMode = Mode2.MID;
-                    if(gamepad1.left_bumper) sliderMode = Mode2.DOWN;
-                    if(gamepad1.cross) sliderMode = Mode2.MANUAL;
+                    if(gamepad1.x) sliderMode = Mode2.HIGH;
+                    if(gamepad1.b) sliderMode = Mode2.DOWN;
+                    if(gamepad1.a) sliderMode = Mode2.MID;
+                    if(gamepad1.y) sliderMode = Mode2.LOW;
                     
                     break;
                     
@@ -184,33 +189,39 @@ public class drive extends LinearOpMode {
                     robot.slider1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                     robot.slider2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-                    if(gamepad1.right_bumper) sliderMode = Mode2.HIGH;
-                    if(gamepad1.left_bumper) sliderMode = Mode2.DOWN;
-                    if(gamepad1.right_stick_button) sliderMode = Mode2.MID;
-                    if(gamepad1.cross) sliderMode = Mode2.MANUAL;
-                    if(gamepad1.left_stick_button) sliderMode = Mode2.LOW;
+                    if(gamepad1.x) sliderMode = Mode2.HIGH;
+                    if(gamepad1.b) sliderMode = Mode2.DOWN;
+                    if(gamepad1.a) sliderMode = Mode2.MID;
+                    if(gamepad1.y) sliderMode = Mode2.LOW;
 
                     break;
             }
             drive.update();
 
-            if(robot.hasDetected() && !robot.lifted() || gamepad1.circle){
+            if(gamepad1.right_bumper){
                 robot.close_intake();
                 gamepad1.rumble(50);
             }
 
-            if(gamepad1.square){
+            if(gamepad1.left_bumper&&deschis==false){
                 robot.open_intake();
+                dropTimer.reset();
+                deschis=true;
+            }
+            if(dropTimer.time()>1000&&deschis==true)
+            {
+                sliderMode=Mode2.DOWN;
+                deschis=false;
             }
 
             if(gamepad1.dpad_up){
-                robot.flip();
-                robot.flip_cone();
+                /*robot.flip();
+                robot.flip_cone();*/
             }
 
             if (gamepad1.dpad_down) {
-                robot.brat_return();
-                robot.return_cone();
+               /* robot.brat_return();
+                robot.return_cone();*/
             }
 
 //            if (gamepad2.cross) {
@@ -223,15 +234,8 @@ public class drive extends LinearOpMode {
 //            if(gamepad2.dpad_right) robot.flip_cone();
 //            if(gamepad2.dpad_left) robot.return_cone();
 
-            telemetry.addData("Mod sasiu: ", currentMode.toString());
-            telemetry.addData("Mod outake: ", sliderMode.toString());
-            telemetry.addData("slider1: ", robot.slider1.getCurrentPosition());
-            telemetry.addData("slider2: ", robot.slider2.getCurrentPosition());
-            telemetry.addData("brat1: ", robot.brat1.getPosition());
-            telemetry.addData("brat2: ", robot.brat2.getPosition());
-            telemetry.addData("pivot: ", robot.pivot.getPosition());
-            telemetry.addData("intake: ", robot.intake.getPosition());
-            telemetry.addData("has detected: ", robot.hasDetected());
+            telemetry.addData("slider 1",robot.slider1.getCurrentPosition());
+            telemetry.addData("slider 2",robot.slider2.getCurrentPosition());
             telemetry.update();
         }
     }

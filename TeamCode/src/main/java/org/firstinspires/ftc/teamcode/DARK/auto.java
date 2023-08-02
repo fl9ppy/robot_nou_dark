@@ -102,6 +102,14 @@ public class auto extends LinearOpMode {
         Pose2d startPose = new Pose2d(-35, -60, 0);
         drive.setPoseEstimate(startPose);
 
+
+        TrajectorySequence pune_preload = drive.trajectorySequenceBuilder(startPose)
+                .forward(10)
+
+                .build();
+
+
+
         //PUT INIT CODE HERE (THAT RUNS WHEN INIT IS PRESSED)
 
 
@@ -160,22 +168,13 @@ public class auto extends LinearOpMode {
 
         //PUT AUTO CODE HERE (DRIVER PRESSED THE PLAY BUTTON!)
 
+        drive.followTrajectorySequence(pune_preload);
 
-        if (tagOfInterest == null) {
-            drive.followTrajectorySequence(null);
-        } else {
-            switch (tagOfInterest.id) {
-                case 1:
-                    drive.followTrajectorySequence(null);
-                    break;
-                case 2:
-                    drive.followTrajectorySequence(null);
-                    break;
-                case 3:
-                    drive.followTrajectorySequence(null);
-                    break;
-            }
-        }
+        sleep(500000000);
+
+
+
+
 
         sleep(1000);
 
