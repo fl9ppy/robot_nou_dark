@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.DARK;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -11,7 +13,7 @@ import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 import java.util.ArrayList;
-
+@Disabled
 public class DetectionPipeline extends OpenCvPipeline {
     private static final Scalar BLUE = new Scalar(0, 0, 255);
     private static final Scalar RED = new Scalar(255, 0, 0);

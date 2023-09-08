@@ -46,6 +46,14 @@ public class drive extends LinearOpMode {
         DRIVER_CONTROL
     }
 
+    enum Mode2 {
+        DOWN,
+        HIGH,
+        MID,
+        LOW
+    }
+
+    Mode2 sliderMode = Mode2.DOWN;
     Mode currentMode = Mode.DRIVER_CONTROL;
 
     public void runOpMode() throws InterruptedException {
@@ -103,6 +111,52 @@ public class drive extends LinearOpMode {
 
                     break;
             }
+
+            switch(sliderMode){
+                case HIGH:
+                    robot.flip_ball();
+                    robot.goSliderToPosition(0, 0.4);
+
+                    if(gamepad1.dpad_right) sliderMode = Mode2.MID;
+                    if(gamepad1.dpad_left) sliderMode = Mode2.LOW;
+                    if(gamepad1.dpad_down) sliderMode = Mode2.DOWN;
+                    break;
+
+                case MID:
+                    robot.flip_ball();
+                    robot.goSliderToPosition(0, 0.4);
+
+                    if(gamepad1.dpad_up) sliderMode = Mode2.HIGH;
+                    if(gamepad1.dpad_left) sliderMode = Mode2.LOW;
+                    if(gamepad1.dpad_down) sliderMode = Mode2.DOWN;
+                    break;
+                case LOW:
+                    robot.flip_ball();
+                    robot.goSliderToPosition(0, 0.4);
+
+                    if(gamepad1.dpad_up) sliderMode = Mode2.HIGH;
+                    if(gamepad1.dpad_right) sliderMode = Mode2.MID;
+                    if(gamepad1.dpad_down) sliderMode = Mode2.DOWN;
+                    break;
+
+                case DOWN:
+                    robot.return_ball();
+                    robot.goSliderToPosition(0, 0.4);
+
+                    if(gamepad1.dpad_up) sliderMode = Mode2.HIGH;
+                    if(gamepad1.dpad_right) sliderMode = Mode2.MID;
+                    if(gamepad1.dpad_left) sliderMode = Mode2.LOW;
+                    break;
+            }
+
+            int press_count=1;
+
+            if(gamepad1.circle) press_count += 1;
+
+            if(press_count % 2 == 0) robot.intake.setPower(1);
+            else robot.intake.setPower(0);
+
+            if(robot.hasDetected()) robot.close_catcher();
 
             drive.update();
 
