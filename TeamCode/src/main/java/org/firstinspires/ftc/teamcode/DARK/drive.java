@@ -62,6 +62,7 @@ public class drive extends LinearOpMode {
 
         robot = new RobotUtils(hardwareMap);
 
+        //TODO: robot.flip_start_pos(0);
 
         waitForStart();
 
@@ -155,6 +156,8 @@ public class drive extends LinearOpMode {
 
             if(press_count % 2 == 0) robot.intake.setPower(1);
             else robot.intake.setPower(0);
+
+            if(gamepad1.right_trigger >= 0.5) robot.launch(1);
 
             if(robot.hasDetected()) robot.close_catcher();
 

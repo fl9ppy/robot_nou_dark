@@ -36,6 +36,7 @@ public class RobotUtils {
     public DcMotor slider;
     public DcMotor intake;
     public DcMotor launcher;
+    public DcMotor launcher_outake;
     public ServoImplEx flip;
     public Servo catcher;
     public RevColorSensorV3 sensor;
@@ -43,18 +44,19 @@ public class RobotUtils {
     int return_pos = 0;
     int close_pos = 0;
     int open_pos = 0;
-    int start_pos= 0;
 
     public RobotUtils(HardwareMap hardwareMap){
         slider = hardwareMap.get(DcMotorEx.class, "slider");
         intake = hardwareMap.get(DcMotorEx.class, "intake");
         launcher = hardwareMap.get(DcMotorEx.class, "launcher");
+        launcher_outake = hardwareMap.get(DcMotorEx.class, "launcher_outake");
         flip = hardwareMap.get(ServoImplEx.class, "flip");
         catcher = hardwareMap.get(Servo.class, "catcher");
         sensor = hardwareMap.get(RevColorSensorV3.class, "sensor");
 
         intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         launcher.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        launcher_outake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         slider.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         slider.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
@@ -91,7 +93,7 @@ public class RobotUtils {
         // If the current position is already at the target position, the sliders do not need to move.
     }
 
-    public void flip_start_pos(){
+    public void flip_start_pos(int start_pos){
         flip.setPosition(start_pos);
     }
 
@@ -110,5 +112,10 @@ public class RobotUtils {
     public void return_ball(){
         flip.setPosition(return_pos);
         open_catcher();
+    }
+
+    public void launch(int power){
+        launcher.setPower(power);
+        launcher_outake.setPower(power);
     }
 }
