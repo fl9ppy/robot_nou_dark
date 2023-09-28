@@ -40,10 +40,10 @@ public class RobotUtils {
     public ServoImplEx flip;
     public Servo catcher;
     public RevColorSensorV3 sensor;
-    int flip_pos = 0;
-    int return_pos = 0;
-    int close_pos = 0;
-    int open_pos = 0;
+    public static int flip_pos = 0;
+    public static int return_pos = 0;
+    public static int close_pos = 0;
+    public static int open_pos = 0;
 
     public RobotUtils(HardwareMap hardwareMap){
         slider = hardwareMap.get(DcMotorEx.class, "slider");
@@ -84,16 +84,16 @@ public class RobotUtils {
 
         if (currentPos > position) {
             // If the current position is higher than the target position, move the sliders down.
-            slider.setPower(-absPower);
+            slider.setPower(absPower);
         }
         else if (currentPos < position) {
             // If the current position is lower than the target position, move the sliders up.
-            slider.setPower(absPower);
+            slider.setPower(-absPower);
         }
         // If the current position is already at the target position, the sliders do not need to move.
     }
 
-    public void flip_start_pos(int start_pos){
+    public void flip_start_pos(double start_pos){
         flip.setPosition(start_pos);
     }
 
@@ -114,8 +114,8 @@ public class RobotUtils {
         open_catcher();
     }
 
-    public void launch(int power){
-        launcher.setPower(power);
-        launcher_outake.setPower(power);
+    public void launch(double power1, double power2){
+        launcher.setPower(power1);
+        launcher_outake.setPower(power2);
     }
 }

@@ -75,8 +75,8 @@ public class drive extends LinearOpMode {
                 case DRIVER_CONTROL:
                     drive.setWeightedDrivePower(
                             new Pose2d(
-                                    gamepad1.left_stick_y/1.7,
-                                    gamepad1.left_stick_x/1.7,
+                                    -gamepad1.left_stick_y/1.7,
+                                    -gamepad1.left_stick_x/1.7,
                                     -gamepad1.right_stick_x/1.7
                             )
                     );
@@ -89,8 +89,8 @@ public class drive extends LinearOpMode {
                 case TURBO:
                     drive.setWeightedDrivePower(
                             new Pose2d(
-                                    gamepad1.left_stick_y,
-                                    gamepad1.left_stick_x,
+                                    -gamepad1.left_stick_y,
+                                    -gamepad1.left_stick_x,
                                     -gamepad1.right_stick_x
                             )
                     );
@@ -102,7 +102,7 @@ public class drive extends LinearOpMode {
                 case PRECISION:
                     drive.setWeightedDrivePower(
                             new Pose2d(
-                                    gamepad1.left_stick_y/4,
+                                    -gamepad1.left_stick_y/4,
                                     -gamepad1.left_stick_x/4,
                                     -gamepad1.right_stick_x/4
                             )
@@ -116,7 +116,7 @@ public class drive extends LinearOpMode {
             switch(sliderMode){
                 case HIGH:
                     robot.flip_ball();
-                    robot.goSliderToPosition(0, 0.4);
+                    robot.goSliderToPosition(-4000, 0.4);
 
                     if(gamepad1.dpad_right) sliderMode = Mode2.MID;
                     if(gamepad1.dpad_left) sliderMode = Mode2.LOW;
@@ -125,7 +125,7 @@ public class drive extends LinearOpMode {
 
                 case MID:
                     robot.flip_ball();
-                    robot.goSliderToPosition(0, 0.4);
+                    robot.goSliderToPosition(-3000, 0.4);
 
                     if(gamepad1.dpad_up) sliderMode = Mode2.HIGH;
                     if(gamepad1.dpad_left) sliderMode = Mode2.LOW;
@@ -133,7 +133,7 @@ public class drive extends LinearOpMode {
                     break;
                 case LOW:
                     robot.flip_ball();
-                    robot.goSliderToPosition(0, 0.4);
+                    robot.goSliderToPosition(-1000, 0.4);
 
                     if(gamepad1.dpad_up) sliderMode = Mode2.HIGH;
                     if(gamepad1.dpad_right) sliderMode = Mode2.MID;
@@ -142,7 +142,7 @@ public class drive extends LinearOpMode {
 
                 case DOWN:
                     robot.return_ball();
-                    robot.goSliderToPosition(0, 0.4);
+                    robot.goSliderToPosition(-10, 0.4);
 
                     if(gamepad1.dpad_up) sliderMode = Mode2.HIGH;
                     if(gamepad1.dpad_right) sliderMode = Mode2.MID;
@@ -152,19 +152,30 @@ public class drive extends LinearOpMode {
 
             int press_count=1;
 
-            if(gamepad1.circle) press_count += 1;
+            if(gamepad1.right_bumper) press_count += 1;
 
             if(press_count % 2 == 0) robot.intake.setPower(1);
             else robot.intake.setPower(0);
 
-            if(gamepad1.right_trigger >= 0.5) robot.launch(1);
+            int press_count2=1;
 
-            if(robot.hasDetected()) robot.close_catcher();
+            if(gamepad1.left_bumper) press_count2 += 1;
+
+            if(press_count2 % 2 == 0) robot.intake.setPower(-1);
+            else robot.intake.setPower(0);
+
+            if(gamepad1.right_trigger >= 0.5) robot.launch(-1, -0.8);
+            else robot.launch(0, 0);
+
+            if(gamepad1.triangle) robot.close_catcher();
+
+            if(gamepad2.cross) robot.flip.setPosition(0);
+            if(gamepad2.square) robot.catcher.setPosition(0);
 
             drive.update();
 
             }
-
+            telemetry.addData("slider: ", robot.slider.getCurrentPosition());
             telemetry.update();
         }
     }
